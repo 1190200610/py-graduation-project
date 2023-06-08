@@ -66,7 +66,7 @@ contract SuperAdministrator {
     constructor() {
         IIoTIDtoAddress["1"] = 0x3e4A6B4Ca26B105d60EF69ce2da05AE0FB7AfAd6;
         IIoTIDtoAddress["2"] = 0xC71b9a32f0a7A34977f8A45C207AC6143FE41553;
-        AddPolicy("test", "0x459a50CBFD80aA261b7db4e3fb5E6ec909c8d139", "1","1", "1", "allow","1","1","1");
+        AddPolicy("test", "0x459a50CBFD80aA261b7db4e3fb5E6ec909c8d139", "1","1", "1", "allow","1","100","*");
         UserAddresstoPublicKey['0x459a50CBFD80aA261b7db4e3fb5E6ec909c8d139d'] = '0x1521f8667aa9fbd62e232088d4414b7b3520da1331647fbbf302713498c9ebc66a801b43fdd22c9de93efcb025c915c33b24715331a8bd9cf0c98e705314b78c';
     }
 

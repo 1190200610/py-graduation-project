@@ -3,6 +3,8 @@ import requests
 import threading
 import tools
 import time
+import pyDHE
+from flask import Flask, request
 from eth_account.messages import encode_defunct, defunct_hash_message
 from eth_utils import encode_hex, decode_hex
 from hexbytes import HexBytes
@@ -13,11 +15,13 @@ my_address = '0x459a50CBFD80aA261b7db4e3fb5E6ec909c8d139'
 my_role = "1"
 my_org = "1"
 device_address = '0x3e4A6B4Ca26B105d60EF69ce2da05AE0FB7AfAd6'
-contract_address = "0x7b5945cF157bB26Be02C5e551e2a39D7EB5FCE02"
+contract_address = "0x3F7FB25F422313eBc76F8f476C4c9144D272c893"
 private_key = "0x47af68c3c8a2a0f0c1b7b339e65d0b1b73734c8d04285efdb6697ec489ec0190"
 public_key = tools.import_public_key_from_private_key(private_key)
 device_signature_map = {}
 device_token_map = {}
+aes_key = "b7a7b140f9d04bc2002c97782b061691589653f093dcea823bb2be7068801e3a"
+
 
 class EventListenerThread(threading.Thread):
     def __init__(self, web3_instance, contract, user_address, device_address):
@@ -32,9 +36,11 @@ class EventListenerThread(threading.Thread):
 
     def send_token(self, user, device, signature, token):
         # 通过device的地址查到的IP地址
-        url = "http://192.168.11.1:5000/test_device"
+        url = "http://192.168.11.128:8888/verify"
         headers = {'Content-Type': 'application/json'}
+        # ase_key = dh_aes()
         data = {
+            # "ase": ase_key,
             "user": user,
             "device": device,
             "signature": signature,
@@ -84,7 +90,7 @@ class EventListenerThread(threading.Thread):
 
 
 def check_access(user_account, user_role, user_org, IIoTID):
-    # ToDo 在查询之前 先检查是否已经有IIoTID对应的Token存入，如果有，直接发送，获取权限
+    #  在查询之前 先检查是否已经有IIoTID对应的Token存入，如果有，直接发送，获取权限
     url = "http://192.168.11.1:5000/checkAccess"
     headers = {'Content-Type': 'application/json'}
     data = {
@@ -105,6 +111,7 @@ def verify_token(data):
     signature = data['signature']
     token = data['token']
     message = defunct_hash_message(text=signature)
+    print(f"共享的AES密钥: {(aes_key)}")
     try:
         # 使用公钥验证签名
         recovered_address = tools.w3.eth.account._recover_hash(message, signature=HexBytes(decode_hex(token)))
@@ -118,6 +125,20 @@ def verify_token(data):
         return False
 
 
+def dh_aes():
+    alice = pyDHE.new()  # 初始化DH交换
+    alice_publicKey = alice.getPublicKey()  # 生成公钥
+    url = "http://192.168.11.128:8888/dh"
+    headers = {'Content-Type': 'application/json'}
+    data = {
+        "alice_publicKey": alice_publicKey
+    }
+    response = requests.post(url, data=json.dumps(data), headers=headers)
+    # 打印 HTTP 状态码和响应内容
+    print(f"Status Code: {response.status_code}")
+    print(f"Response Content: {response.text}")
+    shared_secret_alice = alice.update(response.text)
+    return shared_secret_alice
 
 
 if __name__ == '__main__':

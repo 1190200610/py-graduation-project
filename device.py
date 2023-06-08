@@ -12,7 +12,7 @@ import time
 private_key = '0x78683d62ec0b79dcd6064020491fbfe2e536f8f6138ab6c711eb4eb1b3523d24'
 public_key = tools.import_public_key_from_private_key(private_key)
 address = 0x3e4A6B4Ca26B105d60EF69ce2da05AE0FB7AfAd6
-contract_address = '0x7b5945cF157bB26Be02C5e551e2a39D7EB5FCE02'
+contract_address = '0x1cafDA716d755963a6E36b526D2C364D4221fe5E'
 signed_events_queue = queue.Queue()
 
 class GetToken:
@@ -146,7 +146,6 @@ def verify_token(data):
     else:
         print("No matching signature found in the queue.")
         return False
-
 
 
 if __name__ == '__main__':

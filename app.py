@@ -157,18 +157,6 @@ def addPolicy():
     })
 
 
-@app.route("/test_device", methods=["POST", "GET"])
-def test_device():
-    data = request.get_json()
-    device.verify_token(data)
-
-# 将signature对应的信息如IP地址，过期时间进行对比。
-#       Todo
-
-# 如果有人监听信道，DH密钥交换，商议一个共享秘密，再将通信的内容进行AES加密。
-#       Todo
-
-
 @app.route("/getAsyncRoutes", methods=["POST", "GET"])
 def getAsyncRoutes():
     return json.dumps({
@@ -178,10 +166,4 @@ def getAsyncRoutes():
 
 
 if __name__ == '__main__':
-    app.run(host='192.168.11.1', port='5000')
-    # add_IIoTID_secretKey(w3, abi, '1')
-    # add_policy(w3, abi, '1', '1', '1', '1', 'allow', 1, 5, '192.168.1.5-192.168.2.4')
-    # get_policy(abi, '1', '1', '1', '1')
-    # token = generate_token(abi, '1', '1', '1', '1', '1', '1')
-    # print(token)
-    # check_access(abi, '1', '1', '1', '1', '1', '1')
+    app.run(host='192.168.11.1')
